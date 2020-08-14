@@ -1,45 +1,43 @@
 import React, { useState, useEffect } from 'react'
-import Card from '../card/Card'
+import PokeCard from '../card/PokeCard'
 import styles from './home.module.css'
 import axios from 'axios'
 
-let URL = "https://rickandmortyapi.com/api"
+const URL = 'https://pokeapi.co/api/v2'
 
 export default function Home() {
 
-    let [chars, setChars] = useState([])
+    const [pokes, setPokes] = useState([])
 
     useEffect(() => {
-        getCharacters()
+        getPokemon()
     }, [])
 
-    function nextChar() {
-        chars.shift()
-        if (!chars.length) {
-            //get more characters
+    const nextPokemon = () => {
+        pokes.shift()
+        if (!pokes.length) {
+            // get more pokes
         }
-        setChars([...chars])
+        setPokes([...pokes])
     }
-
-    function renderCharacter() {
-        let char = chars[0]
+    const renderPokemon = () => {
+        const pkmn = pokes[0]
         return (
-            <Card leftClick={nextChar} {...char} />
+            <PokeCard leftClick={nextPokemon} {...pkmn} />
         )
     }
-
-    function getCharacters() {
-        return axios.get(`${URL}/character`)
+    const getPokemon = () => {
+        return axios.get(`${URL}/pokemon?limit=30`)
             .then(res => {
-                setChars(res.data.results)
+                setPokes(res.data.results)
             })
     }
 
     return (
         <div className={styles.container}>
-            <h2>Personajes de Rick y Morty</h2>
+            <h2>Pokedex</h2>
             <div>
-                {renderCharacter()}
+                {renderPokemon()}
             </div>
         </div>
     )
